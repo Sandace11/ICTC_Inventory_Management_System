@@ -1,0 +1,24 @@
+{% extends 'inventory/main.html'%}
+{% load inventory_tags %}
+{%load crispy_forms_tags %}
+{% block header%}
+Edit sub item "{{subitem}}" of item "{{item}}"
+{% endblock header%}
+{%block content%}
+    {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}     
+        <div id="form">
+        
+        <form method="POST">
+        {% csrf_token %}
+        {{subItemForm|crispy}}
+        <button class="btn btn-info" type="Submit">Update</button>
+        </form>
+</div>
+
+{%endblock%}

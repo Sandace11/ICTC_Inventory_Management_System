@@ -1,0 +1,54 @@
+{% extends 'inventory/main.html'%}
+{% load inventory_tags %}
+{%load crispy_forms_tags %}
+{% block header%}
+Create sub item for {{itemName}}
+{% endblock header%}
+{%block content%}
+ 
+
+ 
+    {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+    <div id="prompt">
+    <h5> Do you want to add sub-items to {{itemName}}?</h5>
+    <button class="btn btn-primary" onclick="myFunction()"> Yes </button>
+    <a class="btn btn-primary" href="{% url 'add1'%}"> No! Return to add Item </a>
+    </div>
+    <br/>
+    <br/>
+    
+    
+    
+  
+      
+        <div id="form">
+          <h5> Create a Sub-Item for {{itemName}} </h5>
+        <form method="POST">
+        {% csrf_token %}
+        {{subItemForm|crispy}}
+        <button class="btn btn-info" type="Submit">Add</button>
+        </form>
+        <a href="{% url 'add1'%}"> Return to add item</h4>
+</div>
+
+<script>
+
+window.onload = function() {
+  var x = document.getElementById("form");
+  x.style.display = "none";
+}
+function myFunction() {
+  
+  var x = document.getElementById("form");
+  var y = document.getElementById("prompt")
+  x.style.display = "block";
+  y.style.display = "none";
+}
+</script>
+{%endblock%}

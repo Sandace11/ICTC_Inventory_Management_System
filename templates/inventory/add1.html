@@ -1,0 +1,36 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+{% load static%}
+{%load staticfiles%}
+{% load inventory_tags%}
+
+{% block header%}
+Add Item
+{% endblock header%}
+
+
+{% block content %}
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+  {%endif%}
+
+  <form method="POST">
+  {% csrf_token %}
+    <div class="form-group">
+    <p style="color:grey;"> If you want to add an existing item, add from Search </p>
+      <label for="categorySelect">Select a category for the item</label>
+      <select class="form-control" id="categorySelect" name="categorySelect">
+      {% for obj in categoryObj%}
+      <option value={{obj.category_name}}>{{obj}}</option>
+      {% endfor %}
+       </select>
+         </div>
+         <button class="btn btn-info" type="Submit">Select</button>
+  </form>
+  <br>
+  <a href="{% url 'createCategory'%}">Create new category</a>
+{% endblock content %}

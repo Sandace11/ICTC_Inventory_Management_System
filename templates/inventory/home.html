@@ -1,0 +1,217 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+{% load static%}
+{%load staticfiles%}
+{% load inventory_tags%}
+
+{% block header%}
+Dashboard
+{% endblock header%}
+
+{% block content%}
+
+<div style="width:100%;">
+   <div class="row">
+      <div class="col-md-6 col-xl-4 mb-4">
+         <div class="card shadow border-left-success  py-2">
+            <div class="card-body">
+               <div class="row align-items-center no-gutters">
+                  <div class="col mr-2">
+                     <div class="text-uppercase text-success font-weight-bold text-xs mb-1">
+                        <div class="box1">
+                           <div class="myDiv">working</div>
+                           <div>
+                              <img class="card-img-bottom" src="{% static 'inventory/images/working.svg'%}" alt="Card image" style="width:20px;height:20px;opacity: 0.5;">
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="progress progress-sm" id="myBar">
+                        <div class="progress-bar bg-success" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{% working_percentage %}%;"></div>
+                     </div>
+                     <div class="text-dark font-weight-bold h5 mb-0 myValue"><span>{%working_count%}</span></div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-6 col-xl-4 mb-4">
+         <div class="card shadow border-left-warning py-2">
+            <div class="card-body">
+               <div class="row align-items-center no-gutters">
+                  <div class="col mr-2">
+                     <div class="text-uppercase text-warning font-weight-bold text-xs mb-1">
+                        <div class="box1">
+                           <div class="myDiv">Out of order</div>
+                           <div>
+                              <img class="card-img-bottom" src="{% static 'inventory/images/out_of_order.svg'%}" alt="Card image" style="width:20px;height:20px;opacity: 0.5;">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="progress progress-sm" id="myBar">
+                        <div class="progress-bar bg-warning" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{% out_of_order_percentage %}%;"></div>
+                     </div>
+                     <div class="text-dark font-weight-bold h5 mb-0 myValue"><span>{%out_of_order_count%}</span></div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="col-md-6 col-xl-4 mb-4">
+         <div class="card shadow border-left-info py-2">
+            <div class="card-body">
+               <div class="row align-items-center no-gutters">
+                  <div class="col mr-2">
+                     <div class="text-uppercase text-info font-weight-bold text-xs mb-1">
+                        <div class="box1">
+                           <div class="myDiv">Repairable</div>
+                           <div>
+                              <img class="card-img-bottom" src="{% static 'inventory/images/in_maintenance.svg'%}" alt="Card image" style="width:20px;height:20px;opacity: 0.5;">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="progress progress-sm" id="myBar">
+                        <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{% in_maintenance_percentage %}%;"></div>
+                     </div>
+                     <div class="text-dark font-weight-bold h5 mb-0 myValue"><span>{%in_maintenance_count%}</span></div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>    
+   </div>
+
+   <div class="row justify-content-around">
+
+      <div class="col-4 col-md-4 col-xl-6 card shadow py-2">
+         <div class="card-body">
+            <h3 style="font-weight:bold;">Items based on Room</h3>
+            <canvas id="myChart2" style="padding-top:20px;">
+            </canvas>
+            <hr>
+            <span style="display:table;margin:auto;">
+               <h4>Number of items</h4>
+            </span>
+
+            <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#FF9800;">{% total_products_count %}</span>
+            </div>
+      </div>
+
+
+      <div class="col 4 col-md-5 col-xl-6 card shadow py-2">
+        
+        <div class="card-body">
+            <h3 style="font-weight:bold;">Items based on Category</h3>
+            <canvas id="myChart1" style="padding-top:20px;">
+            </canvas>
+            <br>
+
+            <hr>
+            <div class="row">
+               <div class="col">
+                  <span style="display:table;margin:auto;">
+                     <h4>Number of categories</h4>
+                  </span>
+               </div>
+               <div class="col">
+                  <span style="display:table;margin:auto;">
+                     <h4>Number of item types</h4>
+                  </span>
+               </div>
+            </div>
+
+            <div class="row">
+               <div class="col">
+                  <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#009688;">{% total_categories_count%}</span>
+               </div>
+               <div class="col">
+                  <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#795548;">{% total_item_type_count%}</span>
+               </div>
+            </div>
+         </div>
+        </div>
+        </div>
+   </div>
+
+
+
+   <script>
+      function decodeHtml(html) {
+         var txt = document.createElement("textarea");
+         txt.innerHTML = html;
+         return txt.value;
+      }
+
+
+
+
+      var ctx1 = document.getElementById('myChart1').getContext('2d');
+      var ctx2 = document.getElementById('myChart2').getContext('2d');
+      var chart1 = new Chart(ctx1, {
+         // The type of chart we want to create
+         type: 'doughnut',
+
+         // The data for our dataset
+         data: {
+            labels: {
+               %
+               categoryList %
+            },
+            datasets: [{
+               label: '',
+               data: {
+                  %
+                  itemNumberBasedOnCategory %
+               },
+               backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
+               borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
+            }]
+         },
+
+         // Configuration options go here
+         options: {
+
+
+         }
+      });
+      var chart2 = new Chart(ctx2, {
+         // The type of chart we want to create
+         type: 'bar',
+
+         // The data for our dataset
+         data: {
+            labels: {
+               %
+               roomList %
+            },
+            datasets: [{
+               label: '',
+               data: {
+                  %
+                  itemNumberBasedOnRoom %
+               },
+               backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
+               borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
+            }]
+         },
+
+         // Configuration options go here
+         options: {
+            legend: {
+               display: false
+            },
+            tooltips: {
+               callbacks: {
+                  label: function(tooltipItem) {
+                     return tooltipItem.yLabel;
+                  }
+               }
+            }
+         }
+      });
+   </script>
+   {% endblock content%}

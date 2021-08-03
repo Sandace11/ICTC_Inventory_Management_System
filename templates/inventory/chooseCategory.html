@@ -1,0 +1,12 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Download
+{% endblock header%}
+{% block content%}
+<p style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:15px;"> Category </p>
+<div style="width:50%;">
+       {% for category in categoryObj%}
+          <a href="{% url 'downloadCSV' category.pk %}"><li class="list-group-item"><span class="glyphicon glyphicon-download-alt" style="margin-right:20px;"></span>{{category.category_name}}</li></a>
+            {% endfor%}
+           </div>
+{% endblock content%}

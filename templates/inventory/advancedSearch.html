@@ -1,0 +1,264 @@
+{% extends 'inventory/main.html'%}
+{% load static %}
+{%load staticfiles%}
+<link rel="stylesheet" href="{% static 'inventory/vendor/bootstrap/css/bootstrap.min.css' %}" />
+<script src="{% static 'inventory/vendor/ajax/libs/popper/1.14.6/umd/popper.min.js' %}"></script>
+<script src="{% static 'inventory/vendor/jquery/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'inventory/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    {% block header%}	Advanced Search {% endblock header%}
+
+      {% block content %}
+
+       
+
+     <style>
+    body {
+        background-color: #f2f2f2;
+    }
+    .my-row {
+       
+    }
+    .my-col {
+        
+    }
+    .plus-logo {
+        width:20px;
+        height:20px;
+    }
+    .table-logo {
+        width:12px;
+        height:12px;
+    }
+    tr{
+      font-size:12px;
+      line-height: 20px;
+      
+    }
+    .my-table {
+        margin-top:20px;
+    }
+    .dropdown-toggle::after {
+    display:none;
+    }
+    .table-striped > tbody > tr:nth-child(odd).highlight > td {
+    background-color: #dff0d8;
+}
+
+    </style>
+    {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+
+      <div class="container my-container">
+        
+            <form action="{% url 'advancedSearch' %}" method="POST">  
+            {% csrf_token %}
+            <div class="row my-row">     
+                <div class="col-md-3">
+            <a href="{% url 'createfloor'%}"><img src="{% static 'inventory/images/plus.png' %}" class="plus-logo"></a>
+                <label for="floorSelect">Floor</label>
+                    <select id = "floorSelect" name="floorSelect" onchange='if(this.value != null) { this.form.submit(); }'>
+                         <option value = 'All' {% ifequal floorValue All %} selected {% endifequal %}>  All </option>
+                    {% for obj in floorObj%}
+                        <option value = {{obj.floor}} {% ifequal floorValue obj.floor %} selected {% endifequal %}>  {{obj}} </option>
+                    {% endfor%}
+                    </select>
+                </div>
+                <div class="col-md-6">
+               <a href="{% url 'createroom'%}"> <img src="{% static 'inventory/images/plus.png' %}" class="plus-logo"></a>
+                <label for="roomSelect">Room</label>
+                      <select id = "roomSelect" name="roomSelect" onchange='if(this.value != null) { this.form.submit(); }'>
+                         <option value = 'All' {% ifequal roomValue All %} selected {% endifequal %}>  All </option>
+                    {% for obj in roomObj%}
+                        <option value = {{obj.room_no}} {% ifequal roomValue obj.room_no %} selected {% endifequal %}>  {{obj}} </option>
+                    {% endfor%}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                <a href="{% url 'createCategory' %}">
+                <img src="{% static 'inventory/images/plus.png' %}" class="plus-logo">
+                </a>
+                <label for="categorySelect">Category</label>
+                     <select id = "categorySelect" name="categorySelect" onchange='if(this.value != null) { this.form.submit(); }'>
+                    {% for obj in categoryObj%}
+                        <option value = {{obj.category_name}} {% ifequal categoryValue obj.category_name %} selected {% endifequal %}>  {{obj}} </option>
+                    {% endfor%}
+                    </select>
+                </div>
+                </div>
+                <br>
+                <div class="form-group">
+                <div class="input-group" style="width:500px;">
+                    <input type="text" id="searchInput" onkeyup="myFunction1()" placeholder="Search by name.." class="form-control" aria-describedby="start-search" style="height:30px;margin-top:2px;"/>
+                    <span class="input-group-addon glyphicon glyphicon-search searchIcon" id="start-search"></span>
+                    </div>
+                </div>
+            
+              </form>
+      
+
+        <div class="row my-row">
+        <table class="table table-bordered table-striped my-table" id="dataTable" >
+          <thead class="thead-dark">
+           <tr>
+           <th scope="col"></th>
+             <th scope="col">Name</th>
+             <th scope="col">Model</th>
+             <th scope="col">Working</th>
+             <th scope="col">Out Of Order</th>
+             <th scope="col">Repairable</th>
+             <th scope="col">Room</th>
+             <th scope="col">Cost per item</th>
+             <!-- <th scope="col">Edit</th>
+             <th scope="col">Delete</th> -->
+             {% if category.extra_fields%}
+             {% for value in extrafields %}
+            <th scope="col"> {{ value }} </th>
+             {% endfor %}
+             {% endif %}
+           </tr>
+          </thead>
+          <tbody>
+          {% for item in itemObj%}
+          {% with forloop.counter0 as outer_counter %}
+           <tr>
+            {% if item.sub_items.all %}
+            <td> <a href="#" id="subitems" class="showSubItems" onclick=clicked({{outer_counter}})><img src="{% static 'inventory/images/rightDark.png' %}" class="table-logo"></a> </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+             <td>{{item.name}}</td>
+             <td>{{item.model}}</td>
+             <td>{{item.working}}</td>
+             <td>{{item.out_of_order}}</td>
+             <td>{{item.in_maintenance}}</td>
+             <td>{{item.room}}</td>
+             <td>{{item.cost_per_item}}</td>
+             <!-- <td> <a href="#"><img src = "{% static 'inventory/images/edit.svg' %}" style="width:20px;height:20px;">	</a></td>
+             <td><a href="#"><img src = "{% static 'inventory/images/delete.svg' %}" style="width:20px;height:20px;">	</a></td> -->
+             {% if item.extra_value%}
+             {% for key, value in item.extra_value.items %}
+            <td> {{value}} </td>
+             {% endfor %}
+             {% endif %}
+             <td>
+               <div class="dropdown show">
+                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <img src = "{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
+                 </a>
+                      
+                          <div class="list-group dropdown-menu">
+                            <a class="dropdown-item list-group-item" href="{% url 'addExisting' item.pk %}">Add</a>
+                            <a class="dropdown-item list-group-item" href="{% url 'edit' item.pk %}">Edit</a>
+                            <a class="dropdown-item list-group-item" href="{% url 'delete' item.pk %}">Delete</a>
+                            <a class="dropdown-item list-group-item" href="{% url 'allocate' item.pk %}">Reallocate</a>
+                            </div>
+                        
+             </div>
+               </td>
+
+           </tr>
+           
+           {% if item.sub_items.all%}
+          
+           {% for instance in item.sub_items.all%}
+          
+           <tr class="highlight success sub-{{outer_counter}} child" style="font-size:11px;color:#244c52;">
+           
+             <td></td>
+             <td>{{instance.name}}</td>
+             <td>{{instance.model}}</td>
+             <td>{{instance.working}}</td>
+             <td>{{instance.out_of_order}}</td>
+             <td>{{instance.in_maintenance}}</td>
+             <td></td>
+             <td>{{instance.cost_per_item}}</td>
+             <td>
+               <div class="dropdown show">
+                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <img src = "{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
+                 </a>
+                      
+                          <div class="list-group dropdown-menu">
+                            <a class="dropdown-item list-group-item" href="{% url 'addExistingSubItem' instance.pk%}">Add</a>
+                            <a class="dropdown-item list-group-item" href="{% url 'editSubItem' instance.pk%}">Edit</a>
+                            <a class="dropdown-item list-group-item" href="{% url 'deleteSubItem' instance.pk%}">Delete</a>
+                           
+                            </div>
+                        
+             </div>
+               </td>
+            </tr>
+              
+            {% endfor %}
+           <tr class="sub-{{outer_counter}} child highlight success">
+           <td>
+           <a href="{% url 'createSubItem' item.pk%}"><span class="glyphicon glyphicon-plus"></span></a>
+           </td>
+           </tr>
+           {% endif %}
+
+{% endwith %}
+           {% endfor %}
+          </tbody>
+          </table>
+        
+        </div>
+        
+
+     </div>
+
+
+    <script>
+    
+
+window.onload = function() {
+	var y = document.getElementsByClassName("child");
+ for (var i=0;i<y.length;i++) {
+   	y[i].style.display="none";
+		
+ }
+}
+
+
+
+function clicked(index) {
+		var y = document.getElementsByClassName("sub-".concat(index.toString()));
+ for (var i=0;i<y.length;i++) {
+   	if (y[i].style.display === "none") {
+			y[i].style.display="";	
+		}
+		else {
+		        y[i].style.display="none";
+		}
+ }
+	
+}
+
+    function myFunction1() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchInput");
+  filter = input.value.toUpperCase(); 
+  table = document.getElementById("dataTable");
+  tr = table.getElementsByTagName("tr");
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+    </script>
+{% endblock content%}

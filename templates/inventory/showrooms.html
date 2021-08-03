@@ -1,0 +1,21 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Rooms
+{% endblock header%}
+{% block content %}
+{%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+ <p style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:15px;"> Select a room to edit </p>
+<div style="width:50%;">
+       {% for room in roomObj%}
+          <a href="{% url 'editRoom' room.pk %}"><li class="list-group-item"><span class="glyphicon glyphicon-download-pencil" style="margin-right:20px;"></span>{{room}}</li></a>
+            {% endfor%}
+           </div>
+
+
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Delete Floor
+{% endblock header%}
+{% block content %}
+<style>
+.form-group {
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+}
+</style>
+ {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+
+<form action="{% url 'deletefloor' %}" method="POST">
+{% csrf_token %}
+<div class="form-group">
+    <label for="floorSelect">Select a floor to delete</label>
+    <select class="form-control" id="floorSelect" name="floorNumber">
+   {% for floor in floorObj%}
+   <option>{{floor}}</option>
+   {% endfor %}
+    </select>
+      </div>
+  
+      <button class="btn btn-info" type="Submit">Delete</button>
+ <p style="color:red;"> Caution! Once deleted, all the contents of that floor will also be deleted! </p>
+  </form>
+{% endblock content %}

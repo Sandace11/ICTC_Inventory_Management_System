@@ -1,0 +1,11 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Edit Category
+{% endblock header%}
+{% block content%}
+<div style="width:50%;">
+       {% for category in categoryObj%}
+          <a href="{% url 'editCategoryView' category.pk %}"><li class="list-group-item">{{category.category_name}}</li></a>
+            {% endfor%}
+           </div>
+{% endblock content%}

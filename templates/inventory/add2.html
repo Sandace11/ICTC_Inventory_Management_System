@@ -1,0 +1,27 @@
+{% extends 'inventory/main.html'%}
+{% load inventory_tags %}
+{%load crispy_forms_tags %}
+
+{% block header%}
+Add item to category "{{category}}"
+{% endblock %}
+{%block content%}
+
+
+    {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+   
+  
+    <h3> Create new item </h3>
+    <form method="POST">
+    {% csrf_token %}
+    {{addItemform|crispy}}
+    <button class="btn btn-info" type="Submit">Add</button>
+    </form>
+  
+{%endblock%}

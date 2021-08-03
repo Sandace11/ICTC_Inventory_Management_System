@@ -1,0 +1,6 @@
+# .gitignore
+env/
+inventory/__pycache__
+inventory/migrations
+inventory/templatetags/__pycache__
+labinventory/__pycache__

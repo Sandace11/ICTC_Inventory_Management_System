@@ -1,0 +1,27 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+{% block header%}
+Edit Account
+{% endblock header%}
+{% block content%}
+
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">
+       Update Account Information
+        </legend>
+        {{form|crispy}}
+      </fieldset>
+      <!-- <input type="submit" value="SignUp" /> -->
+      <div class="form-group">
+        <button class="btn btn-info" type="submit">Update</button>
+      </div>
+    </form>
+
+
+
+
+
+
+{% endblock content%}

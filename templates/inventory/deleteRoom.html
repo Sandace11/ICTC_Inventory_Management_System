@@ -1,0 +1,34 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Delete Room
+{% endblock header%}
+{% block content %}
+<style>
+.form-group {
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+}
+</style>
+ {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+
+<form action="{% url 'deleteRoom' %}" method="POST">
+{% csrf_token %}
+<div class="form-group">
+    <label for="roomSelect">Select a room to delete</label>
+    <select class="form-control" id="roomSelect" name="roomNumber">
+   {% for room in roomObj%}
+   <option value={{room.room_no}}>{{room}}</option>
+   {% endfor %}
+    </select>
+      </div>
+  
+      <button class="btn btn-info" type="Submit">Delete</button>
+ <p style="color:red;"> Caution! Once deleted, all the contents of that room will also be deleted! </p>
+  </form>
+{% endblock content %}

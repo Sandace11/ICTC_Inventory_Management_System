@@ -1,0 +1,25 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+
+{% block header%}
+Add a room
+{% endblock header%}
+
+{%block content%}
+
+    {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+
+     
+        <form method="POST">
+        {% csrf_token %}
+        {{createRoomform|crispy}}
+        <button class="btn btn-info" type="Submit">Add</button>
+        </form>
+  
+{%endblock%}

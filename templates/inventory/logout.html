@@ -1,0 +1,8 @@
+{% extends 'inventory/main.html'%}
+{% block header%}
+Log Out
+{% endblock header%}
+{% block content%}
+<p> Are you sure you want to log out? </p>
+  <button class="btn btn-info" onclick="location.href='{% url 'logout' %}'" >Log Out</button>
+{% endblock content%}

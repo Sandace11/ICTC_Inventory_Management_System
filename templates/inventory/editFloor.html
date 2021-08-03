@@ -1,0 +1,29 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+{% block header%}
+Edit floor
+{% endblock header%}
+{% block content %}
+
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+<form method="POST">
+{% csrf_token %}
+ <div class="form-group">
+    <label for="floorSelect">Select a floor to edit</label>
+    <select class="form-control" id="floorSelect" name="oldFloor">
+   {% for obj in floorObj%}
+   <option value={{obj.floor}}>{{obj}}</option>
+   {% endfor %}
+    </select>
+    <label for="floorInput">Enter new floor number</label>
+    <input type="number" id="floorNumber" name="newFloor" />
+      </div>
+      <button class="btn btn-info" type="Submit">Update</button>
+  </form>
+{% endblock content %}

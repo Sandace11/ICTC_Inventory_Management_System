@@ -1,0 +1,85 @@
+{% extends 'inventory/main.html'%}
+{%load crispy_forms_tags %}
+
+{% block header%}
+Create a category
+{% endblock header%}
+{%block content%}
+  <style>
+  #addextrafield:hover {
+    text-decoration-line:underline;
+  }
+  </style>
+
+{%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+    
+      <form method="POST">
+      {% csrf_token %}
+     
+
+      <div class="form-group">
+        {{ addCategoryForm.categoryName|as_crispy_field }}
+        </div>
+       
+      <h7 class="text"> *Default fields for the items of this category:</h7>
+      <p class="text">Name, Model, Working, Out of order, Repairable, Floor, Cost</p>
+      
+      <a type="button" onclick = "clicked()" class="btn" style="color:blue;font-size:13px;" id="addextrafield"><span class="glyphicon glyphicon-plus" style="margin-right:10px;"></span>Add new field</a>
+
+       <div style="width:400px;padding-top:20px;">
+        <div class="form-group" id="extrafield1" style="display:none;">
+        {{ addCategoryForm.extraField1|as_crispy_field }}
+        </div>
+        <div class="form-group" id="extrafield2" style="display:none;">
+        {{ addCategoryForm.extraField2|as_crispy_field }}
+        </div>
+        <div class="form-group" id="extrafield3" style="display:none;">
+        {{ addCategoryForm.extraField3|as_crispy_field }}
+          </div>
+          <div class="form-group" id="warning" style="display:none;color:red;">
+          *Only 3 extra fields are allowed    
+                </div>
+    </div>
+      <button class="btn btn-info" type="Submit" style="font-weight:bold;">Create</button>
+      </form>
+    
+
+<script>
+
+function clicked() {
+  var x1 = document.getElementById("extrafield1");
+  var x2 = document.getElementById("extrafield2");
+  var x3 = document.getElementById("extrafield3");
+  var x4 = document.getElementById("warning");
+console.log(x1.style.display)
+console.log(x1.style.display)
+console.log(x1.style.display)
+
+  if ((x1.style.display==="none") && (x2.style.display==="none") && (x3.style.display==="none"))
+  {
+    x1.style.display = "block";
+  }
+  else if ((x1.style.display==="block") && (x2.style.display==="none") && (x3.style.display==="none")) {
+  x2.style.display = "block";
+}
+else if ((x1.style.display==="block") && (x2.style.display==="block") && (x3.style.display==="none")) {
+  x3.style.display = "block";
+}
+else {
+x4.style.display="block";
+}
+}
+</script>
+
+
+
+
+ 
+
+{%endblock%}
