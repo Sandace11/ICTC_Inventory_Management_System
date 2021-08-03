@@ -58,7 +58,7 @@ def itemNumberBasedOnCategory():
                for i in items:
                    count = count + i.working + i.out_of_order + i.in_maintenance
            list.append(count)
-    return [0]
+    return mark_safe(list)
 
 @register.simple_tag
 def itemNumberBasedOnRoom():
@@ -72,7 +72,7 @@ def itemNumberBasedOnRoom():
                 for i in items:
                     count = count + i.working + i.out_of_order + i.in_maintenance
             list.append(count)
-    return [0]
+    return mark_safe(list)
 
 
 

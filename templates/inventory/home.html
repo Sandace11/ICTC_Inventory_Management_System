@@ -10,6 +10,7 @@ Dashboard
 
 {% block content%}
 
+
 <div style="width:100%;">
    <div class="row">
       <div class="col-md-6 col-xl-4 mb-4">
@@ -29,7 +30,7 @@ Dashboard
                      <div class="progress progress-sm" id="myBar">
                         <div class="progress-bar bg-success" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{% working_percentage %}%;"></div>
                      </div>
-                     <div class="text-dark font-weight-bold h5 mb-0 myValue"><span>{%working_count%}</span></div>
+                     <div class="text-dark font-weight-bold h5 mb-0 myValue"><span>{% working_count %}</span></div>
                   </div>
 
                </div>
@@ -82,7 +83,7 @@ Dashboard
                </div>
             </div>
          </div>
-      </div>    
+      </div>
    </div>
 
    <div class="row justify-content-around">
@@ -98,13 +99,13 @@ Dashboard
             </span>
 
             <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#FF9800;">{% total_products_count %}</span>
-            </div>
+         </div>
       </div>
 
 
       <div class="col 4 col-md-5 col-xl-6 card shadow py-2">
-        
-        <div class="card-body">
+
+         <div class="card-body">
             <h3 style="font-weight:bold;">Items based on Category</h3>
             <canvas id="myChart1" style="padding-top:20px;">
             </canvas>
@@ -129,89 +130,76 @@ Dashboard
                   <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#009688;">{% total_categories_count%}</span>
                </div>
                <div class="col">
-                  <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#795548;">{% total_item_type_count%}</span>
+                  <span style="font-weight:bold;font-size:40px;display:table;margin:auto;color:#795548;">{% total_item_type_count %}</span>
                </div>
             </div>
          </div>
-        </div>
-        </div>
+      </div>
    </div>
+</div>
 
 
 
-   <script>
-      function decodeHtml(html) {
-         var txt = document.createElement("textarea");
-         txt.innerHTML = html;
-         return txt.value;
+<script>
+   function decodeHtml(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+   }
+
+   var ctx1 = document.getElementById('myChart1').getContext('2d');
+   var ctx2 = document.getElementById('myChart2').getContext('2d');
+
+   var chart1 = new Chart(ctx1, {
+      // The type of chart we want to create
+      type: 'doughnut',
+
+      // The data for our dataset
+      data: {
+         labels: {% categoryList %},
+         datasets: [{
+            label: '',
+            data: {% itemNumberBasedOnCategory %},
+            backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
+            borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
+         }]
+      },
+
+      // Configuration options go here
+      options: {
+
+
       }
+   });
+   var chart2 = new Chart(ctx2, {
+      // The type of chart we want to create
+      type: 'bar',
 
+      // The data for our dataset
+      data: {
+         labels: {% roomList %},
+         datasets: [{
+            label: '',
+            data: {% itemNumberBasedOnRoom %},
+            backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
+            borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
+         }]
+      },
 
-
-
-      var ctx1 = document.getElementById('myChart1').getContext('2d');
-      var ctx2 = document.getElementById('myChart2').getContext('2d');
-      var chart1 = new Chart(ctx1, {
-         // The type of chart we want to create
-         type: 'doughnut',
-
-         // The data for our dataset
-         data: {
-            labels: {
-               %
-               categoryList %
-            },
-            datasets: [{
-               label: '',
-               data: {
-                  %
-                  itemNumberBasedOnCategory %
-               },
-               backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
-               borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
-            }]
+      // Configuration options go here
+      options: {
+         legend: {
+            display: false
          },
-
-         // Configuration options go here
-         options: {
-
-
-         }
-      });
-      var chart2 = new Chart(ctx2, {
-         // The type of chart we want to create
-         type: 'bar',
-
-         // The data for our dataset
-         data: {
-            labels: {
-               %
-               roomList %
-            },
-            datasets: [{
-               label: '',
-               data: {
-                  %
-                  itemNumberBasedOnRoom %
-               },
-               backgroundColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000'],
-               borderColor: ['rgb(250,205,85)', 'rgb(58,162,235)', 'rgb(238,97,130)', '#EE61C5', '#B261EE', '#61B3EE', '#61EE84', '#EEEE61', '#EEAA61', '#622121', '#2D8F8E', '#53802B', '#B9D2A3', '#E2DEB8', '#E2B8B8', '#FF0000']
-            }]
-         },
-
-         // Configuration options go here
-         options: {
-            legend: {
-               display: false
-            },
-            tooltips: {
-               callbacks: {
-                  label: function(tooltipItem) {
-                     return tooltipItem.yLabel;
-                  }
+         tooltips: {
+            callbacks: {
+               label: function(tooltipItem) {
+                  return tooltipItem.yLabel;
                }
             }
          }
-      });
-   </script>
-   {% endblock content%}
+      }
+   });
+</script>
+
+{% endblock content%}
