@@ -28,11 +28,13 @@ def register(request):
     context = {'form': form}
     return render(request, 'inventory/register.html', context)
 
+# I understand this function, except for redirection part
 @login_required
 def add1(request):
     if request.method == 'POST':
         category = request.POST['categorySelect']
         c = Categorie.objects.get(category_name = category)
+        # problem lies here
         return redirect('add2',c.pk)
     context = {'categoryObj': Categorie.objects.all()}
     return render(request, 'inventory/add1.html', context)
@@ -42,29 +44,12 @@ def add2(request, key):
     categoryObj = Categorie.objects.get(pk=key)
     itemObj = Item.objects.filter(category=categoryObj)
     if request.method == 'POST':
-        addItemform = addItemForm(data=request.POST, extra_fields_dict=categoryObj.extra_fields)
+        addItemform = addItemForm(data=request.POST)
         if (addItemform.is_valid):
 
             addItemform.save()
             obj = Item.objects.latest('created')
             obj.category = categoryObj
-            obj.save()
-            if len(categoryObj.extra_fields) == 1:
-                temp = categoryObj.extra_fields['field1']
-                # vars()[temp] = forms.CharField(max_length=100,required=False)
-                obj.extra_value.update({temp: request.POST[temp]})
-            elif len(categoryObj.extra_fields) == 2:
-                temp1 = categoryObj.extra_fields['field1']
-                temp2 = categoryObj.extra_fields['field2']
-                temp = {temp1: request.POST[temp1], temp2: request.POST[temp2]}
-                obj.extra_value.update(temp)
-            elif len(categoryObj.extra_fields) == 3:
-                temp1 = categoryObj.extra_fields['field1']
-                temp2 = categoryObj.extra_fields['field2']
-                temp3 = categoryObj.extra_fields['field3']
-                temp = {temp1: request.POST[temp1],
-                        temp2: request.POST[temp2], temp3: request.POST[temp3]}
-                obj.extra_value.update(temp)
             obj.save()
             if (request.POST['room']):
                 pass
@@ -84,7 +69,7 @@ def add2(request, key):
             return redirect('createSubItem',key=obj.id)
 
     else:
-        addItemform = addItemForm(extra_fields_dict=categoryObj.extra_fields)
+        addItemform = addItemForm()
     context = {'addItemform': addItemform,'category':categoryObj}
     return render(request, 'inventory/add2.html', context)
 
@@ -159,39 +144,15 @@ def edit(request,key):
     obj = Item.objects.get(pk=key)
     categoryObj = obj.category
     if request.method == 'POST':
-        form = editItemForm(data=request.POST,extra_fields_dict=obj.extra_value,instance = obj)
+        form = editItemForm(data=request.POST,instance = obj)
         if (form.is_valid):
             form.save()
-            obj.save()
-            if len(categoryObj.extra_fields) ==1:
-                temp = categoryObj.extra_fields['field1']
-                # vars()[temp] = forms.CharField(max_length=100,required=False)
-                if (request.POST[temp]):
-                    obj.extra_value.update({temp:request.POST[temp]})
-            elif len(categoryObj.extra_fields) ==2:
-                temp1 = categoryObj.extra_fields['field1']
-                temp2 = categoryObj.extra_fields['field2']
-                if (request.POST[temp1]):
-                    obj.extra_value.update({temp1:request.POST[temp1]})
-                if (request.POST[temp2]):
-                    obj.extra_value.update({temp2:request.POST[temp2]})
-
-            elif len(categoryObj.extra_fields) ==3:
-                temp1 = categoryObj.extra_fields['field1']
-                temp2 = categoryObj.extra_fields['field2']
-                temp3 = categoryObj.extra_fields['field3']
-                if (request.POST[temp1]):
-                    obj.extra_value.update({temp1:request.POST[temp1]})
-                if (request.POST[temp2]):
-                    obj.extra_value.update({temp2:request.POST[temp2]})
-                if (request.POST[temp3]):
-                    obj.extra_value.update({temp3:request.POST[temp3]})
             obj.save()
             messages.success(request, f'Edit Successful!')
             return redirect('advancedSearch')
 
     else:
-        form = editItemForm(extra_fields_dict=obj.extra_value,instance = obj)
+        form = editItemForm(instance = obj)
     context = {'addItemform':form,'item':obj.name}
     return render(request,'inventory/edit.html',context)
 
@@ -287,20 +248,10 @@ def advancedSearch(request):
     if (floorValue!='All'):
         floorValue = int(floorValue)
 
-    Extrafields = []
     if (itemObj):
         tempItem = Item.objects.filter(category = category)[0]
 
-        if tempItem:
-            for key,value in tempItem.extra_value.items():
-                Extrafields.append(key)
-        else:
-            for key,value in category.extra_fields.items():
-                Extrafields.append(value)
-
-
-
-    args = {'roomObj':roomObj, 'categoryObj':categoryObj, 'floorObj':floorObj, 'itemObj':itemObj,'floorValue':floorValue, 'roomValue':roomValue, 'categoryValue':categoryValue,'category':category,'extrafields':Extrafields}
+    args = {'roomObj':roomObj, 'categoryObj':categoryObj, 'floorObj':floorObj, 'itemObj':itemObj,'floorValue':floorValue, 'roomValue':roomValue, 'categoryValue':categoryValue,'category':category}
     return render(request,'inventory/advancedSearch.html',args)
 
 @login_required
@@ -312,9 +263,6 @@ def downloadCSV(request,key):
     writer = csv.writer(response)
     listOfFields=['Name','Model','Cost per item','Room','Date of acquirement', 'Working', 'Repairable', 'Out of order', 'Created', 'Last Modified']
 
-    if (obj.extra_fields):
-        for key,value in obj.extra_fields.items():
-            listOfFields.append(value)
     writer.writerow(listOfFields)
 
     for obj in itemsObj:
@@ -362,21 +310,11 @@ def createSubItem(request,key):
 
 @login_required
 def createCategory(request):
-    dataTemp = {}
     if request.method == 'POST':
         addCategoryform = addCategoryForm(request.POST)
         if addCategoryform.is_valid():
-            if (request.POST['extraField1']):
-                temp = request.POST['extraField1']
-                dataTemp.update({'field1': temp})
-            if (request.POST['extraField2']):
-                temp = request.POST['extraField2']
-                dataTemp.update({'field2': temp})
-            if (request.POST['extraField3']):
-                temp = request.POST['extraField3']
-                dataTemp.update({'field3': temp})
             Categorie.objects.create(
-                category_name=request.POST['categoryName'], extra_fields=dataTemp)
+                category_name=request.POST['categoryName'])
             messages.success(request, f'Category created successfully!')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
@@ -440,70 +378,18 @@ def deleteRoom(request):
 @login_required
 def editCategoryView(request,key):
     categoryObj = Categorie.objects.get(pk=key)
-    extra_fields_dict={}
-    try:
-        if len(categoryObj.extra_fields) ==1:
-            initialValue1 = categoryObj.extra_fields['field1']
-        elif len(categoryObj.extra_fields) ==2:
-            initialValue1 = categoryObj.extra_fields['field1']
-            initialValue2 = categoryObj.extra_fields['field2']
-        elif len(categoryObj.extra_fields) ==3:
-            initialValue1 = categoryObj.extra_fields['field1']
-            initialValue2 = categoryObj.extra_fields['field2']
-            initialValue3 = categoryObj.extra_fields['field3']
-        extra_fields_dict=categoryObj.extra_fields
-    except:
-        pass
     if request.method == 'POST':
-        form = editCategoryForm(data=request.POST,extra_fields_dict=categoryObj.extra_fields,instance = categoryObj)
+        form = editCategoryForm(data=request.POST,instance = categoryObj)
         if (form.is_valid):
             form.save()
-            try:
-                if len(categoryObj.extra_fields) ==1:
-                    firstKey = request.POST['field1']
-                    categoryObj.extra_fields['field1'] = firstKey
-                elif len(categoryObj.extra_fields) ==2:
-                    firstKey = request.POST['field1']
-                    secondKey = request.POST['field2']
-                    categoryObj.extra_fields['field1'] = firstKey
-                    categoryObj.extra_fields['field2'] = secondKey
-                elif len(categoryObj.extra_fields) ==3:
-                    firstKey = request.POST['field1']
-                    secondKey = request.POST['field2']
-                    thirdKey = request.POST['field3']
-                    categoryObj.extra_fields['field1'] = firstKey
-                    categoryObj.extra_fields['field2'] = secondKey
-                    categoryObj.extra_fields['field3'] = thirdKey
-            except:
-                pass
             categoryObj.save()
             itemObj = Item.objects.filter(category = categoryObj)
-
-            for item in itemObj:
-                try:
-                    if len(categoryObj.extra_fields) ==1:
-                        item.extra_value[firstKey] = item.extra_value.pop(initialValue1)
-
-                    elif len(categoryObj.extra_fields) ==2:
-
-                        item.extra_value[firstKey] = item.extra_value.pop(initialValue1)
-                        item.extra_value[secondKey] = item.extra_value.pop(initialValue2)
-
-
-                    elif len(categoryObj.extra_fields) ==3:
-
-                        item.extra_value[firstKey] = item.extra_value.pop(initialValue1)
-                        item.extra_value[secondKey] = item.extra_value.pop(initialValue2)
-                        item.extra_value[thirdKey] = item.extra_value.pop(initialValue3)
-                    item.save()
-                except:
-                    pass
             messages.success(request, f'Edit Successful!')
             return redirect('home')
 
     else:
 
-        form = editCategoryForm(extra_fields_dict=extra_fields_dict,instance = categoryObj)
+        form = editCategoryForm(instance = categoryObj)
     context = {'form':form}
     return render(request,'inventory/editcategory.html',context)
 

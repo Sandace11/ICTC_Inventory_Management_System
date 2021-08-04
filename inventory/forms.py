@@ -20,13 +20,8 @@ class addCategoryForm(forms.Form):
 
 class addItemForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        self.extra_fields_dict = kwargs.pop('extra_fields_dict')
-   
         super().__init__(*args, **kwargs)
       
-        for key, value in self.extra_fields_dict.items():
-            self.fields[value] = forms.CharField(required=False)
-            
         for field in self.Meta.Notrequired:
             self.fields[field].required = False
 
@@ -46,13 +41,8 @@ class addItemForm(ModelForm):
 
 class editItemForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        self.extra_fields_dict = kwargs.pop('extra_fields_dict')
-   
         super().__init__(*args, **kwargs)
       
-        for key, value in self.extra_fields_dict.items():
-            self.fields[key] = forms.CharField(required=False,initial=value)
-            
         for field in self.Meta.Notrequired:
             self.fields[field].required = False
 
@@ -121,12 +111,7 @@ class editRoomForm(ModelForm):
 
 class editCategoryForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        self.extra_fields_dict = kwargs.pop('extra_fields_dict')
-   
         super().__init__(*args, **kwargs)
-      
-        for key, value in self.extra_fields_dict.items():
-            self.fields[key] = forms.CharField(required=False,initial=value)
 
     class Meta:
         model = Categorie
