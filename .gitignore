@@ -6,3 +6,4 @@ inventory/templatetags/__pycache__
 labinventory/__pycache__
 db.sqlite3
 .vscode/
+labinventory/settings.py
