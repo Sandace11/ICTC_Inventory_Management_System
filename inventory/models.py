@@ -49,14 +49,14 @@ class Item(models.Model):
         return "{}-{}".format(self.name, self.model)
 
 class Floor(models.Model):
-    floor = models.PositiveSmallIntegerField(help_text='Enter the floor number',validators=[MinValueValidator(0)])
+    floor = models.PositiveSmallIntegerField(help_text='Enter the floor number', unique=True, validators=[MinValueValidator(0)])
     def __str__(self):
         return str(self.floor)
 
 class Room(models.Model):
-    room_no = models.PositiveSmallIntegerField(help_text='Enter the room number',validators=[MinValueValidator(0)])
+    room_no = models.PositiveSmallIntegerField(unique=True, help_text='Enter the room number',validators=[MinValueValidator(0)])
     room_name = models.CharField(max_length=50, default='Generic',
-                                 help_text='Enter the name of the room')
+                                 help_text='Enter the name of the room', unique=True)
     floor = models.ForeignKey(
         'Floor', help_text='In which floor is this room?', on_delete=models.CASCADE)
     def __str__(self):

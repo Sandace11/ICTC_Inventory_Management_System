@@ -45,8 +45,7 @@ def add2(request, key):
     itemObj = Item.objects.filter(category=categoryObj)
     if request.method == 'POST':
         addItemform = addItemForm(data=request.POST)
-        if (addItemform.is_valid):
-
+        if (addItemform.is_valid()):
             addItemform.save()
             obj = Item.objects.latest('created')
             obj.category = categoryObj
