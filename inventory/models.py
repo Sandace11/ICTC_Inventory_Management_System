@@ -1,11 +1,15 @@
 # Create your models here.
 
+from collections import defaultdict
+from typing import DefaultDict
 from django.db import models
 import datetime
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy
 from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
 
 
 def validate_single_word(value):
@@ -26,7 +30,12 @@ class Categorie(models.Model):
     def __str__(self):
         return str(self.category_name)
 
+def myDefault():
+    return {'list': []}
+
+
 class Item(models.Model):
+    state = JSONField(default=myDefault)
     category = models.ForeignKey('Categorie', on_delete=models.CASCADE,
                                  help_text='Select the category of the equipment', null=True)
     name = models.CharField(max_length=50, default='Generic',
@@ -45,16 +54,18 @@ class Item(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, null=True)
     extra_value = JSONField(blank=True, null=True, default=dict)
+    remarks = models.CharField(max_length=400, default='',
+                            help_text='Enter remarks')
     def __str__(self):
         return "{}-{}".format(self.name, self.model)
 
 class Floor(models.Model):
-    floor = models.PositiveSmallIntegerField(help_text='Enter the floor number', unique=True, validators=[MinValueValidator(0)])
+    floor = models.IntegerField(help_text='Enter the floor number', unique=True, validators=[MinValueValidator(0)])
     def __str__(self):
         return str(self.floor)
 
 class Room(models.Model):
-    room_no = models.PositiveSmallIntegerField(unique=True, help_text='Enter the room number',validators=[MinValueValidator(0)])
+    room_no = models.IntegerField(unique=True, help_text='Enter the room number',validators=[MinValueValidator(0)])
     room_name = models.CharField(max_length=50, default='Generic',
                                  help_text='Enter the name of the room', unique=True)
     floor = models.ForeignKey(

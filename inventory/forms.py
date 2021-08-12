@@ -29,8 +29,8 @@ class addItemForm(ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'model', 'cost_per_item', 'room',
-                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order']
-        Notrequired = ['room','cost_per_item']
+                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks']
+        Notrequired = ['model','cost_per_item']
         labels = {
         "in_maintenance": "Number of Repairable items",
         "out_of_order": "Number of Out-of-order items",
@@ -50,7 +50,7 @@ class editItemForm(ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'model', 'cost_per_item', 'room',
-                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order']
+                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks']
         Notrequired = ['room','cost_per_item']
         labels = {
         "in_maintenance": "Number of Repairable items",

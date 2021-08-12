@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import subItemForm
+from datetime import datetime
 
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver,Signal
@@ -146,6 +147,15 @@ def edit(request,key):
         form = editItemForm(data=request.POST,instance = obj)
         if (form.is_valid):
             form.save()
+            # get and modify and save
+            to_add = {'working': obj.working, 
+            'in_maintenance': obj.in_maintenance,
+             'out_of_order': obj.out_of_order,
+             'remarks': obj.remarks,
+             'verified_by': request.user.username,
+             'verification_date': datetime.now().strftime("%Y-%m-%d")}
+            
+            obj.state['list'].append(to_add)
             obj.save()
             messages.success(request, f'Edit Successful!')
             return redirect('advancedSearch')
@@ -338,7 +348,7 @@ def deletefloor(request):
         except:
            messages.warning(request, f'Unable to delete the floor!')
         return redirect('deletefloor')
-    return render(request,'inventory/deletefloor.html',{'floorObj':Floor.objects.all()})
+    return render(request,'inventory/deleteFloor.html',{'floorObj':Floor.objects.all()})
 
 
 @login_required

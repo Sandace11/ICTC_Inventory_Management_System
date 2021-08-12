@@ -2,7 +2,7 @@
 {% load inventory_tags %}
 {%load crispy_forms_tags %}
 {% block header%}
-Edit item "{{item}}"
+Verify item "{{item}}"
 {% endblock header%}
 {%block content%}
 
@@ -18,7 +18,7 @@ Edit item "{{item}}"
     <form method="POST">
     {% csrf_token %}
     {{addItemform|crispy}}
-    <button class="btn btn-info" type="Submit">Edit</button>
+    <button class="btn btn-info" type="Submit">Verify</button>
     </form>
 
 
