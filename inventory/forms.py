@@ -29,12 +29,13 @@ class addItemForm(ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'model', 'cost_per_item', 'room',
-                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks']
+                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks', 'itemSource']
         Notrequired = ['model','cost_per_item']
         labels = {
         "in_maintenance": "Number of Repairable items",
         "out_of_order": "Number of Out-of-order items",
         "working":"Number of working items",
+        'itemSource' : "Source of item",
         
         }
   
@@ -50,12 +51,13 @@ class editItemForm(ModelForm):
     class Meta:
         model = Item
         fields = ['name', 'model', 'cost_per_item', 'room',
-                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks']
+                  'date_of_acquire', 'working', 'in_maintenance', 'out_of_order', 'remarks', 'itemSource']
         Notrequired = ['room','cost_per_item']
         labels = {
         "in_maintenance": "Number of Repairable items",
         "out_of_order": "Number of Out-of-order items",
         "working":"Number of working items",
+        'itemSource' : "Source of item",
         }
 
 

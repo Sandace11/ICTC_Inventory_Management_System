@@ -497,3 +497,11 @@ def deleteSubItem(request,key):
     except:
         messages.warning(request, f'Unable to delete sub-item')
     return redirect('advancedSearch')
+
+@login_required
+def details(request, key):
+    try:
+        return render(request,'inventory/details.html',{'itemObj':Item.objects.get(pk=key)})
+    except:
+        messages.warning(request, f'Unable to find item')
+    return redirect('advancedSearch')

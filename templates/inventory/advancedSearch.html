@@ -114,6 +114,7 @@
              <th scope="col">Repairable</th>
              <th scope="col">Room</th>
              <th scope="col">Cost per item</th>
+             <th scope="col">Source of item</th>
              <!-- <th scope="col">Edit</th>
              <th scope="col">Delete</th> -->
              {% if category.extra_fields%}
@@ -139,6 +140,7 @@
              <td>{{item.in_maintenance}}</td>
              <td>{{item.room}}</td>
              <td>{{item.cost_per_item}}</td>
+             <td>{{item.itemSource}}</td>
              <!-- <td> <a href="#"><img src = "{% static 'inventory/images/edit.svg' %}" style="width:20px;height:20px;">	</a></td>
              <td><a href="#"><img src = "{% static 'inventory/images/delete.svg' %}" style="width:20px;height:20px;">	</a></td> -->
              {% if item.extra_value%}
@@ -147,19 +149,45 @@
              {% endfor %}
              {% endif %}
              <td>
-               <div class="dropdown show">
-                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   <img src = "{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
-                 </a>
-                      
-                          <div class="list-group dropdown-menu">
-                            <a class="dropdown-item list-group-item" href="{% url 'addExisting' item.pk %}">Add</a>
-                            <a class="dropdown-item list-group-item" href="{% url 'edit' item.pk %}">Edit</a>
-                            <a class="dropdown-item list-group-item" href="{% url 'delete' item.pk %}">Delete</a>
-                            <a class="dropdown-item list-group-item" href="{% url 'allocate' item.pk %}">Reallocate</a>
-                            </div>
-                        
-             </div>
+
+
+              <div class="btn-group" role="group" aria-label="...">
+                 <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       Options
+                       <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu">
+                       <li><a class="dropdown-item" href="{% url 'addExisting' item.pk %}">Add</a></li>
+                       <li><a class="dropdown-item" href="{% url 'edit' item.pk %}">Verify</a></li>
+                       <li><a class="dropdown-item" href="{% url 'delete' item.pk %}">Delete</a></li>
+                       <li><a class="dropdown-item" href="{% url 'allocate' item.pk %}">Reallocate</a></li>
+                    </ul>
+
+                 </div>
+              </div>
+
+
+
+               {% comment %} <div class="dropdown show">
+                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <img src="{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
+                  </a>
+
+                  <div class="list-group dropdown-menu">
+                     <a class="dropdown-item list-group-item" href="{% url 'addExisting' item.pk %}">Add</a>
+                     <a class="dropdown-item list-group-item" href="{% url 'edit' item.pk %}">Edit</a>
+                     <a class="dropdown-item list-group-item" href="{% url 'delete' item.pk %}">Delete</a>
+                     <a class="dropdown-item list-group-item" href="{% url 'allocate' item.pk %}">Reallocate</a>
+                  </div>
+               </div> {% endcomment %}
+
+
+
+
+
+
                </td>
 
            </tr>

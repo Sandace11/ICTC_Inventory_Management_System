@@ -10,6 +10,7 @@ from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 def validate_single_word(value):
@@ -56,6 +57,20 @@ class Item(models.Model):
     extra_value = JSONField(blank=True, null=True, default=dict)
     remarks = models.CharField(max_length=400, default='',
                             help_text='Enter remarks')
+
+    KHARID = 'Kharid'
+    ANUDAN = 'Anudan'
+    SOURCE_CHOICES = [
+        (KHARID, 'Kharid'),
+        (ANUDAN, 'Anudan'),
+    ]
+
+    itemSource = models.CharField(
+        max_length=6,
+        choices = SOURCE_CHOICES,
+        default = KHARID,
+    )
+
     def __str__(self):
         return "{}-{}".format(self.name, self.model)
 
