@@ -501,7 +501,9 @@ def deleteSubItem(request,key):
 @login_required
 def details(request, key):
     try:
-        return render(request,'inventory/details.html',{'itemObj':Item.objects.get(pk=key)})
+        itemObj = Item.objects.get(pk=key)
+        loglist = itemObj.state['list']
+        return render(request,'inventory/details.html',{'itemObj':itemObj, 'loglist':loglist})
     except:
         messages.warning(request, f'Unable to find item')
     return redirect('advancedSearch')

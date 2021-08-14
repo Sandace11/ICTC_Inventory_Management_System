@@ -35,7 +35,7 @@ urlpatterns = [
     path('editSubItem/<int:key>',views.editSubItem,name='editSubItem'),
     path('addExistingSubItem/<int:key>',views.addExistingSubItem,name='addExistingSubItem'),
     path('deleteSubItem/<int:key>',views.deleteSubItem,name='deleteSubItem'),
-    path('details/<int:key>', views.details, name='detailsItem'),
+    path('details/<int:key>', views.details, name='details'),
 ]
 
 

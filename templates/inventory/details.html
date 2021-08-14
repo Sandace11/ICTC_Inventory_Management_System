@@ -19,7 +19,7 @@
 {%endif%}
 
 
-<div class="panel panel-primary">
+<div class="panel panel-success">
     <div class="panel-heading">
       <h3 class="panel-title">Item Details</h3>
     </div>
@@ -39,5 +39,36 @@
         Status: {{itemObj.itemSource}}
     </div>
   </div>
+
+<div class="panel panel-success">
+   <!-- Default panel contents -->
+   <div class="panel-heading">Verification Log</div>
+   <div class="panel-body">
+      <table class="table">
+         <tr>
+            <th>Date Verified</th>
+            <th>Verified By</th>
+            <th>Working</th>
+            <th>Repairable</th>
+            <th>Out of Order</th>
+            <th>Remarks</th>
+         </tr>
+         
+         {%for item in loglist%}
+          <tr>
+              <td>{{item.verification_date}}</td>
+              <td>{{item.verified_by}}</td>
+              <td>{{item.working}}</td>
+              <td>{{item.in_maintenance}}</td>
+              <td>{{item.out_of_order}}</td>  
+              <td>{{item.remarks}}</td>
+          </tr>
+         {%endfor%}
+         
+      </table>
+   </div>
+</div>
+
+  
 
 {% endblock content%}
