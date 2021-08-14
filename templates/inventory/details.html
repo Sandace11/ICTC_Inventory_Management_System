@@ -1,0 +1,43 @@
+{% extends 'inventory/main.html'%}
+{% load static %}
+{%load staticfiles%}
+<link rel="stylesheet" href="{% static 'inventory/vendor/bootstrap/css/bootstrap.min.css' %}" />
+<script src="{% static 'inventory/vendor/ajax/libs/popper/1.14.6/umd/popper.min.js' %}"></script>
+<script src="{% static 'inventory/vendor/jquery/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'inventory/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+{% block header%} Verification Details{% endblock header%}
+
+
+{% block content %}
+{%if messages%}
+{%for message in messages%}
+<div class="alert alert-{{message.tags}}">
+    {{message}}
+</div>
+{%endfor%}
+{%endif%}
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Item Details</h3>
+    </div>
+    <div class="panel-body">
+        Name of Item: {{itemObj.name}}
+        <br>
+        Model: {{itemObj.model}}
+        <br>
+        Category: {{itemObj.category.category_name}}
+        <br>
+        Floor: {{itemObj.room.floor}}
+        <br>
+        Room: {{itemObj.room}}
+        <br>
+        Cost: {{itemObj.cost_per_item}}
+        <br>
+        Status: {{itemObj.itemSource}}
+    </div>
+  </div>
+
+{% endblock content%}
