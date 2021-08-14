@@ -168,26 +168,6 @@
                  </div>
               </div>
 
-
-
-               {% comment %} <div class="dropdown show">
-                  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     <img src="{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
-                  </a>
-
-                  <div class="list-group dropdown-menu">
-                     <a class="dropdown-item list-group-item" href="{% url 'addExisting' item.pk %}">Add</a>
-                     <a class="dropdown-item list-group-item" href="{% url 'edit' item.pk %}">Edit</a>
-                     <a class="dropdown-item list-group-item" href="{% url 'delete' item.pk %}">Delete</a>
-                     <a class="dropdown-item list-group-item" href="{% url 'allocate' item.pk %}">Reallocate</a>
-                  </div>
-               </div> {% endcomment %}
-
-
-
-
-
-
                </td>
 
            </tr>
@@ -197,31 +177,39 @@
            {% for instance in item.sub_items.all%}
           
            <tr class="highlight success sub-{{outer_counter}} child" style="font-size:11px;color:#244c52;">
-           
-             <td></td>
-             <td>{{instance.name}}</td>
-             <td>{{instance.model}}</td>
-             <td>{{instance.working}}</td>
-             <td>{{instance.out_of_order}}</td>
-             <td>{{instance.in_maintenance}}</td>
-             <td></td>
-             <td>{{instance.cost_per_item}}</td>
-             <td>
-               <div class="dropdown show">
-                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   <img src = "{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
-                 </a>
-                      
-                          <div class="list-group dropdown-menu">
-                            <a class="dropdown-item list-group-item" href="{% url 'addExistingSubItem' instance.pk%}">Add</a>
-                            <a class="dropdown-item list-group-item" href="{% url 'editSubItem' instance.pk%}">Edit</a>
-                            <a class="dropdown-item list-group-item" href="{% url 'deleteSubItem' instance.pk%}">Delete</a>
-                           
-                            </div>
-                        
-             </div>
-               </td>
-            </tr>
+
+              <td></td>
+              <td>{{instance.name}}</td>
+              <td>{{instance.model}}</td>
+              <td>{{instance.working}}</td>
+              <td>{{instance.out_of_order}}</td>
+              <td>{{instance.in_maintenance}}</td>
+              <td>{{instance.room}}</td>
+              <td>{{instance.cost_per_item}}</td>
+              <td>{{instance.itemSource}}</td>
+              <td>
+                 <div class="dropdown show">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <img src="{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
+                    </a>
+
+                    <div class="list-group dropdown-menu">
+                       <a class="dropdown-item list-group-item" href="{% url 'addExistingSubItem' instance.pk%}">Add</a>
+                       <a class="dropdown-item list-group-item" href="{% url 'editSubItem' instance.pk%}">Edit</a>
+                       <a class="dropdown-item list-group-item" href="{% url 'deleteSubItem' instance.pk%}">Delete</a>
+                    </div>
+
+                    <ul class="dropdown-menu">
+                       <li><a class="dropdown-item" href="{% url 'addExisting' item.pk %}">Add</a></li>
+                       <li><a class="dropdown-item" href="{% url 'edit' item.pk %}">Verify</a></li>
+                       <li><a class="dropdown-item" href="{% url 'delete' item.pk %}">Delete</a></li>
+                       <li><a class="dropdown-item" href="{% url 'allocate' item.pk %}">Reallocate</a></li>
+                       <li><a class="dropdown-item" href="{% url 'details' item.pk %}">Verification log </a></li>
+                    </ul>
+
+                 </div>
+              </td>
+           </tr>
               
             {% endfor %}
            <tr class="sub-{{outer_counter}} child highlight success">

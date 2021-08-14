@@ -66,7 +66,7 @@ def add2(request, key):
             messages.success(request, f'Added Successfully!')
             obj = Item.objects.latest('created')
 
-            return redirect('createSubItem',key=obj.id)
+            return redirect('add1')
 
     else:
         addItemform = addItemForm()
