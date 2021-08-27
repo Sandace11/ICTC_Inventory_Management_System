@@ -15,6 +15,7 @@ CSV files are also available for download.
 - `python manage.py makemigrations`
 - `python manage.py migrate`
 - `python manage.py createsuperuser` and add an admin user
+- `python manage.py runserver`
 - Open 127.0.0.1:8000 on your browser and login with admin credentials
 
 ### Screenshots
