@@ -96,8 +96,8 @@ WSGI_APPLICATION = 'labinventory.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'testdb',
-        'USER': 'myuser',
+        'NAME': 'wordle',
+        'USER': 'postgres',
         'PASSWORD': '3124',
         'HOST': 'localhost',
         'PORT': '5432',
