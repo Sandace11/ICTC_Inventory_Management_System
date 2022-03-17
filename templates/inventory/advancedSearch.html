@@ -193,11 +193,11 @@
                        <img src="{% static 'inventory/images/3dot.png' %}" class="imghoverzoom">
                     </a>
 
-                    <div class="list-group dropdown-menu">
+                    <!-- <div class="list-group dropdown-menu">
                        <a class="dropdown-item list-group-item" href="{% url 'addExistingSubItem' instance.pk%}">Add</a>
                        <a class="dropdown-item list-group-item" href="{% url 'editSubItem' instance.pk%}">Edit</a>
                        <a class="dropdown-item list-group-item" href="{% url 'deleteSubItem' instance.pk%}">Delete</a>
-                    </div>
+                    </div> -->
 
                     <ul class="dropdown-menu">
                        <li><a class="dropdown-item" href="{% url 'addExisting' item.pk %}">Add</a></li>
