@@ -114,9 +114,10 @@
              <th scope="col">Repairable</th>
              <th scope="col">Room</th>
              <th scope="col">Cost per item</th>
+             <th scope="col">Remarks</th>
              <th scope="col">Source of item</th>
-             <!-- <th scope="col">Edit</th>
-             <th scope="col">Delete</th> -->
+             <th scope="col">Actions</th>
+             <!-- <th scope="col">Delete</th> -->
              {% if category.extra_fields%}
              {% for value in extrafields %}
             <th scope="col"> {{ value }} </th>
@@ -140,6 +141,7 @@
              <td>{{item.in_maintenance}}</td>
              <td>{{item.room}}</td>
              <td>{{item.cost_per_item}}</td>
+             <td>{{item.remarks}}</td>
              <td>{{item.itemSource}}</td>
              <!-- <td> <a href="#"><img src = "{% static 'inventory/images/edit.svg' %}" style="width:20px;height:20px;">	</a></td>
              <td><a href="#"><img src = "{% static 'inventory/images/delete.svg' %}" style="width:20px;height:20px;">	</a></td> -->
