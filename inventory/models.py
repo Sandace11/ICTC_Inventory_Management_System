@@ -1,104 +1,119 @@
-# Create your models here.
-
-from collections import defaultdict
-from typing import DefaultDict
-from django.db import models
-import datetime
 from django.contrib.postgres.fields import JSONField
-from django.core.exceptions import ValidationError
-from django.db.models.fields import CharField
-from django.utils.translation import gettext_lazy
 from django.core.validators import MinValueValidator
-from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Model, CharField
 from django.utils.translation import gettext_lazy as _
 
 
-def validate_single_word(value):
-     if (' ' in value) == True:
-        raise ValidationError(
-            ('%(value)s contains space '),
-            params={'value': value},
-        )
-
-# Create your models here.
-
-
-class Categorie(models.Model):
-    category_name = models.CharField(max_length=50, default='Generic',
-                                     help_text='Enter the category of the item',
-                                     unique=True, validators=[validate_single_word])
-    # extra_fields = JSONField(blank=True, null=True, default=True)
-    def __str__(self):
-        return str(self.category_name)
-
-def myDefault():
-    return {'list': []}
-
-
-class Item(models.Model):
-    state = JSONField(default=myDefault)
-    category = models.ForeignKey('Categorie', on_delete=models.CASCADE,
-                                 help_text='Select the category of the equipment', null=True)
-    name = models.CharField(max_length=50, default='Generic',
-                            help_text='Enter the brand name of the item')
-    model = models.CharField(max_length=50, default='Generic',
-                             help_text='Enter the model of the item', blank=True, null=True)
-    cost_per_item = models.DecimalField(
-        decimal_places=2, max_digits=10, null=True, help_text='Enter the cost per item',blank=True,validators=[MinValueValidator(0)])
-    room = models.ForeignKey('Room', null=True, on_delete=models.SET_NULL,
-                             help_text='Select room where it is kept')
-    date_of_acquire = models.DateField(
-        default=datetime.date.today, help_text='Enter the date of acquire')
-    working = models.IntegerField(default=0,validators=[MinValueValidator(0)])
-    in_maintenance = models.IntegerField(default=0,validators=[MinValueValidator(0)])
-    out_of_order = models.IntegerField(default=0,validators=[MinValueValidator(0)])
-    created = models.DateTimeField(auto_now_add=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True, null=True)
-    extra_value = JSONField(blank=True, null=True, default=dict)
-    remarks = models.CharField(max_length=400, default='',
-                            help_text='Enter remarks')
-
-    KHARID = 'Kharid'
-    ANUDAN = 'Anudan'
-    SOURCE_CHOICES = [
-        (KHARID, 'Kharid'),
-        (ANUDAN, 'Anudan'),
-    ]
-
-    itemSource = models.CharField(
-        max_length=6,
-        choices = SOURCE_CHOICES,
-        default = KHARID,
-    )
+# DONE
+# VISUAL TEST PASSED
+class Category(Model):
+    categoryName = CharField(max_length=64, default='Uncategorized',
+                             help_text='Enter category of the product',
+                             unique=True)
 
     def __str__(self):
-        return "{}-{}".format(self.name, self.model)
+        return str(self.categoryName)
 
-class Floor(models.Model):
-    floor = models.IntegerField(help_text='Enter the floor number', unique=True, validators=[MinValueValidator(0)])
+
+# DONE
+class Type(Model):
+    typeName = CharField(
+        max_length=64, unique=True, default='No Type', help_text='Enter type of the product')
+    category = models.ForeignKey(
+        'Category', on_delete=models.PROTECT, related_name='types')
+
+    def __str__(self) -> str:
+        return self.typeName
+
+# DONE
+class Product(Model):
+    type = models.ForeignKey('Type', on_delete=models.PROTECT,
+                             help_text='Select type of the product')
+    name = CharField(max_length=64,
+                     help_text='Enter the name of the item')
+    unitCost = models.DecimalField(
+        decimal_places=2, max_digits=10, null=True, blank=True, help_text='Enter unit price of the item', validators=[MinValueValidator(0)])
+    room = models.ForeignKey('Room', on_delete=models.PROTECT,
+                             help_text='Select the room of the prodcut')
+
+    donor = models.ForeignKey('Donor', related_name='products', null=True, blank=True)
+    firstAddedDate = models.DateTimeField(null=True)
+    lastModifiedDate = models.DateField(
+        help_text='Enter the date of acquire', auto_now=True)
+    working = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    inMaintenance = models.IntegerField(
+        default=0, validators=[MinValueValidator(0)])
+    outOfOrder = models.IntegerField(
+        default=0, validators=[MinValueValidator(0)])
+    properties = JSONField(blank=True, null=True, default=dict)
+    remarks = CharField(max_length=400, default='',
+                        help_text='Enter remarks')
+
     def __str__(self):
-        return str(self.floor)
+        return self.name
 
-class Room(models.Model):
-    room_no = models.IntegerField(unique=True, help_text='Enter the room number',validators=[MinValueValidator(0)])
-    room_name = models.CharField(max_length=50, default='Generic',
-                                 help_text='Enter the name of the room', unique=True)
+    def count(self):
+        return self.working + self.inMaintenance + self.outOfOrder
+
+
+# DONE
+class SubProduct(Model):
+    product = models.ForeignKey('Product', on_delete=models.PROTECT,
+                                help_text='Select product of this subproduct', related_name='subProducts')
+    name = CharField(max_length=64,
+                     help_text='Enter the name of the subproduct')
+    unitCost = models.DecimalField(
+        decimal_places=2,
+        max_digits=10,
+        null=True,
+        blank=True,
+        help_text='Enter unit price of the item',
+        validators=[MinValueValidator(0)])
+    firstAddedDate = models.DateTimeField(auto_now_add=True, null=True)
+    lastModifiedDate = models.DateField(
+        help_text='Enter the date of acquire', auto_now=True)
+    working = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    inMaintenance = models.IntegerField(
+        default=0, validators=[MinValueValidator(0)])
+    outOfOrder = models.IntegerField(
+        default=0, validators=[MinValueValidator(0)])
+    properties = JSONField(blank=True, null=True, default=dict)
+    remarks = CharField(max_length=400, default='',
+                        help_text='Enter remarks')
+
+    def __str__(self):
+        return "{} -> {}".format(self.product.name, self.name)
+
+    def count(self):
+        return self.working + self.inMaintenance + self.outOfOrder
+
+
+# DONE
+class Floor(Model):
+    floorNumber = models.IntegerField(
+        help_text='Enter the floor number', unique=True, validators=[MinValueValidator(0)])
+
+    def __str__(self):
+        return str(self.floorNumber)
+
+
+# DONE
+class Room(Model):
+    roomNumber = models.IntegerField(
+        unique=True, help_text='Enter the room number', validators=[MinValueValidator(0)])
+    roomName = CharField(max_length=64, default='Unnamed',
+                         help_text='Enter room name', unique=True)
     floor = models.ForeignKey(
-        'Floor', help_text='In which floor is this room?', on_delete=models.CASCADE)
-    def __str__(self):
-        return "{}:{}".format(self.room_no, self.room_name)
-
-class SubItem(models.Model):
-    item = models.ForeignKey(Item,related_name='sub_items',on_delete=models.CASCADE,null=True,blank=True)
-    name = models.CharField(max_length=50, default='Generic',
-                            help_text='Enter the name of the sub-item')
-    model = models.CharField(max_length=50, default='Generic',
-                             help_text='Enter the model of the sub-item', blank=True, null=True)
-    cost_per_item = models.DecimalField(
-        decimal_places=2, max_digits=10, null=True, help_text='Enter the cost per sub-item',blank=True,validators=[MinValueValidator(0)])
-    working = models.IntegerField(default=0,validators=[MinValueValidator(0)])
-    in_maintenance = models.IntegerField(default=0,validators=[MinValueValidator(0)])
-    out_of_order = models.IntegerField(default=0,validators=[MinValueValidator(0)])
+        'Floor', help_text='In which floor is this room?', on_delete=models.PROTECT, related_name='rooms')
 
     def __str__(self):
-        return "{}-{}".format(self.name, self.model)
+        return "Room No. {}: {}".format(self.roomNumber, self.roomName)
+
+
+# DONE
+class Donor(Model):
+    name = CharField(max_length=64)
+
+    def __str__(self) -> str:
+        return self.name

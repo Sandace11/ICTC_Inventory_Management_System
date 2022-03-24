@@ -85,18 +85,7 @@ WSGI_APPLICATION = 'labinventory.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'labinventory',
-#         'USER': 'animesh',
-#         'PASSWORD': 'password1234',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'wordle',
+#         'NAME': 'finalDemo',
 #         'USER': 'postgres',
 #         'PASSWORD': '3124',
 #         'HOST': 'localhost',
@@ -106,12 +95,12 @@ WSGI_APPLICATION = 'labinventory.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'finalDemo',
-        'USER': 'postgres',
-        'PASSWORD': '3124',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'ictc',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '8889',
     }
 }
 
