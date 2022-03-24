@@ -44,7 +44,7 @@ class Product(Model):
     working = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     inMaintenance = models.IntegerField(
         default=0, validators=[MinValueValidator(0)])
-    outOfOrder = models.IntegerField(
+    damaged = models.IntegerField(
         default=0, validators=[MinValueValidator(0)])
     properties = JSONField(blank=True, null=True, default=dict)
     remarks = CharField(max_length=400, default='',
@@ -76,7 +76,7 @@ class SubProduct(Model):
     working = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     inMaintenance = models.IntegerField(
         default=0, validators=[MinValueValidator(0)])
-    outOfOrder = models.IntegerField(
+    damaged = models.IntegerField(
         default=0, validators=[MinValueValidator(0)])
     properties = JSONField(blank=True, null=True, default=dict)
     remarks = CharField(max_length=400, default='',
